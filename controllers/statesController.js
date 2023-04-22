@@ -6,16 +6,16 @@ const data = {
 
 
 const getAllStates = (req, res) => {
-    res.json(data.statesData);
+    res.status(200).json(data.statesData);
 }
 
 
 const getState = (req,res) => {
     const state = data.statesData.find(state => state.code == req.params.state);
     if (!state) {
-        return res.status(400).json({ "message": `State Code ${req.params.state} not found` });
+        return res.status(404).json({ "message": `State Code ${req.params.state} not found` });
     }
-    res.json(state);
+    res.status(200).json(state);
 
 }
 
