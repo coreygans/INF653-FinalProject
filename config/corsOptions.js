@@ -1,6 +1,6 @@
 
 //Cross Origin Resource Sharing
-const approvedlist = ['https://inf653-final-project-coreyg.glitch.me', 'http://localhost:3500'];
+const approvedlist = ['https://inf653-final-project-coreyg.glitch.me','https://dazzling-snickerdoodle-777101.netlify.app', 'http://localhost:3500'];
 const corsOptions = {
 
     origin: (origin, callback) => {
