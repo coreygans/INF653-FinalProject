@@ -1,6 +1,6 @@
 
 //Cross Origin Resource Sharing
-const approvedlist = ['https://www.yoursite.com','http://127.0.0.1:5500', 'http://localhost:3500'];
+const approvedlist = ['https://inf653-final-project-coreyg.glitch.me', 'http://localhost:3500'];
 const corsOptions = {
 
     origin: (origin, callback) => {
