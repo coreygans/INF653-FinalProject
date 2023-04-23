@@ -17,7 +17,9 @@ const getState = async (req,res) => {
     }
     state.funfacts = [];
     const funfact = await StatesDB.findOne({stateCode: req.params.state.toUpperCase()}, 'funfacts').lean();
-    state.funfacts = state.funfacts.concat(funfact.funfacts);
+    if(funfact){
+        state.funfacts = state.funfacts.concat(funfact.funfacts);
+    }
     res.status(200).json(state);
 
 }
