@@ -9,7 +9,7 @@ router.route('/')
     //.patch(statesController.updateFunFact)
     //.delete(statesController.deleteFunFact);
 
-    router.route('/:state')
+router.route('/:state')
     .get(statesController.getState);
 
 module.exports = router;

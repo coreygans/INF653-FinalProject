@@ -13,11 +13,12 @@ const getAllStates = (req, res) => {
 const getState = (req,res) => {
     const state = data.statesData.find(state => state.code == req.params.state);
     if (!state) {
-        return res.status(404).json({ "message": `State Code ${req.params.state} not found` });
+        return res.status(404).json({ "message": "Invalid state abbreviation parameter" });
     }
     res.status(200).json(state);
 
 }
+
 
 module.exports = {
     getAllStates,
