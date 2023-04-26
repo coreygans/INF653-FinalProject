@@ -24,9 +24,10 @@ const getState = async (req,res) => {
 
 }
 
-const getStateInfo = (req, res) => {
+const getStateInfo = async (req, res) => {
     const state = data.statesData.find(state => state.code == req.params.state.toUpperCase());
     const info = req.params.info;
+    const funfact = await StatesDB.findOne({stateCode: req.params.state.toUpperCase()}, 'funfacts').lean();
     if (!state) {
         return res.status(404).json({ "message": "Invalid state abbreviation parameter" });
     }
@@ -38,11 +39,14 @@ const getStateInfo = (req, res) => {
             return res.status(200).json({'state': state.state, 'nickname':state.nickname});
             break;
         case 'population':
-            return res.status(200).json({'state': state.state, 'population':state.population});
+            return res.status(200).json({'state': state.state, 'population':state.population.toLocaleString("en-US")});
             break;
         case 'admission':
             return res.status(200).json({'state': state.state, 'admission':state.admission_date});
-            break;    
+            break;
+        case 'funfact':
+            const rand = Math.floor(Math.random() * funfact.funfacts.length);
+            return res.status(200).json({'state': state.state, 'funfact':funfact.funfacts[rand]});
         default:
             return res.status(404).json({ "message": "Invalid endpoint" });
 
