@@ -1,4 +1,5 @@
 const StatesDB = require('../model/States');
+const path = require('path');
 const data = {
     statesData: require('../model/statesData.json'),
     setState: function (data) {this.states = data}
@@ -42,20 +43,25 @@ const getStateInfo = async (req, res) => {
             return res.status(200).json({'state': state.state, 'population':state.population.toLocaleString("en-US")});
             break;
         case 'admission':
-            return res.status(200).json({'state': state.state, 'admission':state.admission_date});
+            return res.status(200).json({'state': state.state, 'admitted':state.admission_date});
             break;
         case 'funfact':
-            const rand = Math.floor(Math.random() * funfact.funfacts.length);
-            return res.status(200).json({'state': state.state, 'funfact':funfact.funfacts[rand]});
+            if(funfact) {
+                const rand = Math.floor(Math.random() * funfact.funfacts.length);
+                return res.status(200).json({'funfact':funfact.funfacts[rand]});
+            }
+            else {
+                return res.status(404).json({ 'message': 'No Fun Facts found for ' + state.state }); 
+            }
         default:
-            return res.status(404).json({ "message": "Invalid endpoint" });
+            res.status(404);
+            if(req.accepts('html')) {
+                res.sendFile(path.join(__dirname,'..','views', '404.html'));
+            }
 
     }
 
 }
-
-//TODO: Add the suffix endpoints for :state/ so that it is all processed by one function
-// check for the path and just have conditional in a single function block since the logic willbe the same.
 
 module.exports = {
     getAllStates,
