@@ -5,11 +5,15 @@ const statesController = require('../controllers/statesController');
 
 router.route('/')
     .get(statesController.getAllStates)
+
+
+router.route('/:state')
+    .get(statesController.getState);
     //.post(statesController.createFunFact)
     //.patch(statesController.updateFunFact)
     //.delete(statesController.deleteFunFact);
 
-router.route('/:state')
-    .get(statesController.getState);
+router.route('/:state/:info')
+    .get(statesController.getStateInfo);
 
 module.exports = router;
