@@ -1,3 +1,4 @@
-const fs = require('fs');
-const fsPromises = require('fs').promises;
-
+const data = {
+    statesData: require('../model/statesData.json'),
+    setState: function (data) {this.states = data}
+};

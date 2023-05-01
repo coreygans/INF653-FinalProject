@@ -5,8 +5,17 @@ const data = {
     setState: function (data) {this.states = data}
 };
 
-//TODO: Need to add funfacts to this endpoint
-const getAllStates = (req, res) => {
+//Need to add funfacts to this endpoint
+//    data.statesData.forEach(state => ) add the funfacts for each state by looking up the funfact for the state and then appending
+
+const getAllStates = async (req, res) => {
+    const state = data.statesData.forEach(state => state.code)
+    const funfact = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
+
+    if(funfact){
+        state.funfacts = [];
+        state.funfacts = state.funfacts.concat(funfact.funfacts);
+    }
     res.status(200).json(data.statesData);
 }
 
@@ -63,8 +72,60 @@ const getStateInfo = async (req, res) => {
 
 }
 
+const allStateCodes = () => {
+    const state = data.statesData;
+    const stateMap = state.map(state => state.code);
+    return stateMap;
+}
+const nonContig = ['AK','HI'];
+
+const contigStates = (req) => {
+    const allStates = allStateCodes();
+    const contigResults = allStates.filter(state => !nonContig.includes(state));
+    return contigResults;
+}
+
+//TODO: Need to get POST working to append if it exists. Also need to get the state logic down (verify if I need this or not)
+const createFunFact = async (req, res) => { 
+    const state = req.params.state.toUpperCase();
+    const stateExist = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
+ //   if (!allStateCodes.includes(state)) {
+  //      return res.status(400).json({ 'message': 'Invalid state abbreviation parameter' });
+  //   }
+
+    try {
+        if(!stateExist){
+        const result = await StatesDB.create({
+            stateCode: state,
+            funfacts: req.body.funfacts
+        });
+
+        res.status(201).json(result);
+        }
+        else{
+        const funfact = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
+        const result = funfact.push(req.body.funfacts);
+        await StatesDB.save();    
+
+        res.status(201).json(result);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const updateFunFact = async (req,res) => {
+        
+}      
+const deleteFunFact = async (req,res) => {        
+
+}
+
 module.exports = {
     getAllStates,
     getState,
-    getStateInfo
+    getStateInfo,
+    createFunFact,
+    updateFunFact,
+    deleteFunFact
 }

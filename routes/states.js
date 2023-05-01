@@ -8,12 +8,15 @@ router.route('/')
 
 
 router.route('/:state')
-    .get(statesController.getState);
-    //.post(statesController.createFunFact)
-    //.patch(statesController.updateFunFact)
-    //.delete(statesController.deleteFunFact);
+    .get(statesController.getState)
+
 
 router.route('/:state/:info')
-    .get(statesController.getStateInfo);
+    .get(statesController.getStateInfo)
+
+router.route('/:state/funfact')
+    .post(statesController.createFunFact)
+    .patch(statesController.updateFunFact)
+    .delete(statesController.deleteFunFact);
 
 module.exports = router;
