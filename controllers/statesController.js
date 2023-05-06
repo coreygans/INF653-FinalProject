@@ -112,15 +112,15 @@ const updateFunFact = async (req,res) => {
     const funfact = req.body.funfact;
     console.log("This is the index: " + index + " and this is the funfact: " + funfact);
     try {
-        if(!stateExist) {
-            return res.status(404).json({ 'message': 'No Fun Facts found for ' + statesData.state }); 
-        }
-        else if(!index) {
+        if(!index) {
             console.log(index);
             return res.status(404).json({ 'message': 'State fun fact index value required' }); 
         }
         else if(!funfact){
             return res.status(404).json({ 'message': 'State fun facts value required' }); 
+        }
+        else if(!stateExist) {
+            return res.status(404).json({ 'message': 'No Fun Facts found for ' + statesData.state }); 
         }
         else if(index > stateExist.funfacts.length){
             return res.status(404).json({ 'message': 'No Fun Fact found at that index for ' + statesData.state }); 
@@ -147,12 +147,12 @@ const deleteFunFact = async (req,res) => {
     const index = req.body.index;
     
     try {
-        if(!stateExist) {
-            return res.status(404).json({ 'message': 'No Fun Facts found for ' + statesData.state }); 
-        }
-        else if(!index) {
+        if(!index) {
             console.log(index);
             return res.status(404).json({ 'message': 'State fun fact index value required' }); 
+        }
+        else if(!stateExist) {
+            return res.status(404).json({ 'message': 'No Fun Facts found for ' + statesData.state }); 
         }
         else if(index > stateExist.funfacts.length){
             return res.status(404).json({ 'message': 'No Fun Fact found at that index for ' + statesData.state }); 
