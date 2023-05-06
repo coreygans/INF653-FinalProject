@@ -38,10 +38,10 @@ const getStateInfo = async (req, res) => {
     }
     switch (info) {
         case 'capital':
-            return res.status(200).json({'state': statesData.state, 'capital':state.capital_city});
+            return res.status(200).json({'state': statesData.state, 'capital':statesData.capital_city});
             break;
         case 'nickname':
-            return res.status(200).json({'state': statesData.state, 'nickname':state.nickname});
+            return res.status(200).json({'state': statesData.state, 'nickname':statesData.nickname});
             break;
         case 'population':
             return res.status(200).json({'state': statesData.state, 'population':statesData.population.toLocaleString("en-US")});
