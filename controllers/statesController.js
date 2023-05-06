@@ -114,9 +114,7 @@ const updateFunFact = async (req,res) => {
         else {
             const allFunFacts = stateExist.funfacts;       
             const updatedFunfacts = allFunFacts.map((fact,i)=> i === (index-1) ? funfact : fact); 
-            console.log(updatedFunfacts);
             const newFunfacts = await StatesDB.findOneAndUpdate({stateCode: state}, {'funfacts': updatedFunfacts}, {new: true});
-            console.log(newFunfacts);
             res.status(201).json(newFunfacts);
             }
     }
@@ -129,6 +127,29 @@ const updateFunFact = async (req,res) => {
         
 }      
 const deleteFunFact = async (req,res) => {        
+    const state = req.params.state.toUpperCase();
+    const stateExist = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
+    const index = req.body.index;
+    
+    try {
+        if(!stateExist) {
+            return res.status(404).json({ 'message': 'No Fun Facts found for ' + state.state }); 
+        }
+        else if(!index) {
+            console.log(index);
+            return res.status(404).json({ 'message': 'State fun fact index value required' }); 
+        }
+        else {
+            const allFunFacts = stateExist.funfacts;       
+            const updatedFunfacts = allFunFacts.filter((fact,i)=> i !== (index-1)); 
+            const newFunfacts = await StatesDB.findOneAndUpdate({stateCode: state}, {'funfacts': updatedFunfacts}, {new: true});
+            res.status(201).json(newFunfacts);
+            }
+    }
+    catch (err) {
+    
+        console.error(err);
+    }
 
 }
 
