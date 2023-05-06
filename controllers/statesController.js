@@ -110,7 +110,7 @@ const updateFunFact = async (req,res) => {
     const stateExist = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
     const index = req.body.index;
     const funfact = req.body.funfacts;
-    
+    console.log("This is the index: " + index + " and this is the funfact: " + funfact);
     try {
         if(!stateExist) {
             return res.status(404).json({ 'message': 'No Fun Facts found for ' + statesData.state }); 
