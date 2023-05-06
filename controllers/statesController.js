@@ -7,11 +7,16 @@ const data = {
 const stateProcessing = require('../middleware/stateProcessing');
 const { stat } = require('fs');
 
-//TODO Need to add funfacts to this endpoint
-//    data.statesData.forEach(state => ) add the funfacts for each state by looking up the funfact for the state and then appending
-const getAllStates = (req, res) => {
-    const state = data.statesData;
-    res.status(200).json(state);
+const getAllStates = async (req, res) => {
+    const statesData = data.statesData;
+    for (stateRecord of statesData ) {
+        const funfact = await StatesDB.findOne({stateCode: stateRecord.code}, 'funfacts').lean();
+        if(funfact){
+            stateRecord.funfacts = [];
+            stateRecord.funfacts = stateRecord.funfacts.concat(funfact.funfacts);
+        }
+    }
+    res.status(200).json(statesData);
 }
 
 
