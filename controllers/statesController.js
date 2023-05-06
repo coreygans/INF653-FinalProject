@@ -4,19 +4,15 @@ const data = {
     statesData: require('../model/statesData.json'),
     setState: function (data) {this.states = data}
 };
+const stateProcessing = require('../middleware/stateProcessing');
+const { stat } = require('fs');
 
 //Need to add funfacts to this endpoint
 //    data.statesData.forEach(state => ) add the funfacts for each state by looking up the funfact for the state and then appending
 
-const getAllStates = async (req, res) => {
-    const state = data.statesData.forEach(state => state.code)
-    const funfact = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
-
-    if(funfact){
-        state.funfacts = [];
-        state.funfacts = state.funfacts.concat(funfact.funfacts);
-    }
-    res.status(200).json(data.statesData);
+const getAllStates = (req, res) => {
+    const state = data.statesData;
+    res.status(200).json(state);
 }
 
 
@@ -72,18 +68,7 @@ const getStateInfo = async (req, res) => {
 
 }
 
-const allStateCodes = () => {
-    const state = data.statesData;
-    const stateMap = state.map(state => state.code);
-    return stateMap;
-}
-const nonContig = ['AK','HI'];
 
-const contigStates = (req) => {
-    const allStates = allStateCodes();
-    const contigResults = allStates.filter(state => !nonContig.includes(state));
-    return contigResults;
-}
 
 //TODO: Need to get POST working to append if it exists. Also need to get the state logic down (verify if I need this or not)
 const createFunFact = async (req, res) => { 
@@ -103,11 +88,9 @@ const createFunFact = async (req, res) => {
         res.status(201).json(result);
         }
         else{
-        const funfact = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
-        const result = funfact.push(req.body.funfacts);
-        await StatesDB.save();    
-
-        res.status(201).json(result);
+        const allFunFacts = stateExist.funfacts.concat(req.body.funfacts);
+        const funfact = await StatesDB.findOneAndUpdate({stateCode: state}, {'funfacts': allFunFacts}, {new: true});
+        res.status(201).json(funfact);
         }
     } catch (err) {
         console.error(err);
@@ -115,6 +98,34 @@ const createFunFact = async (req, res) => {
 }
 
 const updateFunFact = async (req,res) => {
+    const state = req.params.state.toUpperCase();
+    const stateExist = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
+    const index = req.body.index;
+    const funfact = req.body.funfacts;
+    
+    try {
+        if(!stateExist) {
+            return res.status(404).json({ 'message': 'No Fun Facts found for ' + state.state }); 
+        }
+        else if(!index) {
+            console.log(index);
+            return res.status(404).json({ 'message': 'State fun fact index value required' }); 
+        }
+        else {
+            const allFunFacts = stateExist.funfacts;       
+            const updatedFunfacts = allFunFacts.map((fact,i)=> i === (index-1) ? funfact : fact); 
+            console.log(updatedFunfacts);
+            const newFunfacts = await StatesDB.findOneAndUpdate({stateCode: state}, {'funfacts': updatedFunfacts}, {new: true});
+            console.log(newFunfacts);
+            res.status(201).json(newFunfacts);
+            }
+    }
+    catch (err) {
+    
+        console.error(err);
+    }
+
+ 
         
 }      
 const deleteFunFact = async (req,res) => {        
