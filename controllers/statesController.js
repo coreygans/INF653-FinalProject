@@ -109,7 +109,7 @@ const updateFunFact = async (req,res) => {
     const state = req.params.state.toUpperCase();
     const stateExist = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
     const index = req.body.index;
-    const funfact = req.body.funfacts;
+    const funfact = req.body.funfact;
     console.log("This is the index: " + index + " and this is the funfact: " + funfact);
     try {
         if(!stateExist) {
