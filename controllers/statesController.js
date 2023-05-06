@@ -9,6 +9,7 @@ const { stat } = require('fs');
 
 const getAllStates = async (req, res) => {
     const statesData = data.statesData;
+    const contig = req.query.contig;
     for (stateRecord of statesData ) {
         const funfact = await StatesDB.findOne({stateCode: stateRecord.code}, 'funfacts').lean();
         if(funfact){
@@ -16,7 +17,18 @@ const getAllStates = async (req, res) => {
             stateRecord.funfacts = stateRecord.funfacts.concat(funfact.funfacts);
         }
     }
+    if(contig === 'true'){
+    const contigTrue = statesData.filter((obj) => !stateProcessing.nonContig.includes(obj.code));
+    res.status(200).json(contigTrue);
+    }
+    else if(contig === 'false'){
+        const contigFalse = statesData.filter((obj) => !stateProcessing.contigStates().includes(obj.code));
+        res.status(200).json(contigFalse);
+    }
+    else{
     res.status(200).json(statesData);
+    }
+
 }
 
 

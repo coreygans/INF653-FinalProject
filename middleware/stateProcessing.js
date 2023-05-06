@@ -9,7 +9,7 @@ const allStateCodes = () => {
 }
 const nonContig = ['AK','HI'];
 
-const contigStates = (req) => {
+const contigStates = () => {
     const allStates = allStateCodes();
     const contigResults = allStates.filter(state => !nonContig.includes(state));
     return contigResults;
