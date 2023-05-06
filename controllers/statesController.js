@@ -154,6 +154,9 @@ const deleteFunFact = async (req,res) => {
             console.log(index);
             return res.status(404).json({ 'message': 'State fun fact index value required' }); 
         }
+        else if(index > stateExist.funfacts.length){
+            return res.status(404).json({ 'message': 'No Fun Fact found at that index for ' + statesData.state }); 
+        }
         else {
             const allFunFacts = stateExist.funfacts;       
             const updatedFunfacts = allFunFacts.filter((fact,i)=> i !== (index-1)); 
