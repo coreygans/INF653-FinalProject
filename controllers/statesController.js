@@ -79,9 +79,6 @@ const createFunFact = async (req, res) => {
     const state = req.params.state.toUpperCase();
     const stateExist = await StatesDB.findOne({stateCode: state}, 'funfacts').lean();
     const funfacts = req.body.funfacts;
- //   if (!allStateCodes.includes(state)) {
-  //      return res.status(400).json({ 'message': 'Invalid state abbreviation parameter' });
-  //   }
 
     try {
         if(!funfacts){
@@ -108,7 +105,6 @@ const createFunFact = async (req, res) => {
     }
 }
 
-//TODO Need to check the state array and see if the state code exists. If it isn't a valid state, throw an error
 const updateFunFact = async (req,res) => {
     const statesData = data.statesData.find(state => state.code == req.params.state.toUpperCase());
     const state = req.params.state.toUpperCase();
@@ -132,8 +128,7 @@ const updateFunFact = async (req,res) => {
         else {
             const allFunFacts = stateExist.funfacts;       
             const updatedFunfacts = allFunFacts.map((fact,i)=> i === (index-1) ? funfact : fact); 
-            const newFunfacts = await StatesDB.findOneAndUpdate({stateCode: state}, {'funfacts': updatedFunfacts}, {new: true});
-            console.log("These are the new funfacts I'm patching: " + newFunfacts);
+            const newFunfacts = await StatesDB.findOneAndUpdate({stateCode: state}, {'funfacts': updatedFunfacts}, {new: true}).lean();
             res.status(201).json(newFunfacts);
             }
     }
@@ -141,8 +136,6 @@ const updateFunFact = async (req,res) => {
     
         console.error(err);
     }
-
- 
         
 }      
 const deleteFunFact = async (req,res) => {       

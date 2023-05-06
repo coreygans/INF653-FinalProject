@@ -10,6 +10,6 @@ const statesSchema = new Schema({
     funfacts: { 
         type: [String]
     }
-})
+},{ versionKey: '__v' } );
 
 module.exports = mongoose.model('State', statesSchema);
